@@ -1,33 +1,23 @@
-package engine.dtos.responses;
-
-import engine.model.Quiz;
+package engine.dtos.requests;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuizResponse {
-    private int id;
+public class QuizRequest {
     private String title;
     private String text;
     private List<String> options;
+    private int answer;
 
-    public QuizResponse() {
+    public QuizRequest() {
         this.options = new ArrayList<>();
     }
 
-    public QuizResponse(Quiz quiz) {
-        this.id = quiz.getId();
-        this.title = quiz.getTitle();
-        this.text = quiz.getText();
-        this.options = quiz.getOptions();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public QuizRequest(String title, String text, List<String> options, int answer) {
+        this.title = title;
+        this.text = text;
+        this.options = options;
+        this.answer = answer;
     }
 
     public String getTitle() {
@@ -52,5 +42,13 @@ public class QuizResponse {
 
     public void setOptions(List<String> options) {
         this.options = options;
+    }
+
+    public int getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(int answer) {
+        this.answer = answer;
     }
 }

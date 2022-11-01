@@ -247,6 +247,159 @@ files:
         }
     }
   learner_created: false
+- name: src/engine/dtos/responses/QuizResponse.java
+  visible: true
+  text: |
+    package engine.dtos.responses;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class QuizResponse {
+        private String title;
+        private String text;
+        private List<String> options;
+
+        public QuizResponse() {
+            this.options = new ArrayList<>();
+        }
+
+        public QuizResponse(String title, String text, List<String> options) {
+            this.title = title;
+            this.text = text;
+            this.options = options;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public List<String> getOptions() {
+            return options;
+        }
+
+        public void setOptions(List<String> options) {
+            this.options = options;
+        }
+    }
+  learner_created: true
+- name: src/engine/controllers/QuizController.java
+  visible: true
+  text: |
+    package engine.controllers;
+
+    import engine.dtos.responses.AnswerResponse;
+    import engine.dtos.responses.QuizResponse;
+    import org.springframework.web.bind.annotation.*;
+
+    import java.util.List;
+
+    @RestController
+    @RequestMapping("/api")
+    public class QuizController {
+
+        @GetMapping("/quiz")
+        public QuizResponse getQuiz() {
+            return new QuizResponse("The Java Logo", "What is depicted on the Java logo?",
+                    List.of("Robot","Tea leaf","Cup of coffee","Bug"));
+        }
+
+        @PostMapping("/quiz")
+        public AnswerResponse answerQuiz(@RequestParam(name = "answer") int answer) {
+            if (answer == 2) {
+                return new AnswerResponse(true);
+            }
+            return new AnswerResponse(false);
+        }
+    }
+  learner_created: true
+- name: src/engine/dtos/requests/AnswerRequest.java
+  visible: true
+  text: |
+    package engine.dtos.requests;
+
+    public class AnswerRequest {
+        private int answer;
+
+        public AnswerRequest() {
+        }
+
+        public AnswerRequest(int answer) {
+            this.answer = answer;
+        }
+
+        public int getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(int answer) {
+            this.answer = answer;
+        }
+
+        @Override
+        public String toString() {
+            return "AnswerRequest{" +
+                    "answer=" + answer +
+                    '}';
+        }
+    }
+  learner_created: true
+- name: src/engine/dtos/responses/AnswerResponse.java
+  visible: true
+  text: |
+    package engine.dtos.responses;
+
+    public class AnswerResponse {
+        private boolean success;
+        private String feedback;
+
+        public AnswerResponse(boolean success) {
+            this.success = success;
+            if (success) {
+                this.feedback = "Congratulations, you're right!";
+            } else {
+                this.feedback = "Wrong answer! Please, try again.";
+            }
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public String getFeedback() {
+            return feedback;
+        }
+
+        public void setFeedback(String feedback) {
+            this.feedback = feedback;
+        }
+    }
+  learner_created: true
+- name: src/engine/services/QuizService.java
+  visible: true
+  learner_created: true
+- name: src/engine/model/Quiz.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/8253#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 01 Nov 2022 13:09:45 UTC"
 record: -1
