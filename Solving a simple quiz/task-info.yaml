@@ -132,6 +132,24 @@ files:
         }
     }
   learner_created: false
-feedback_link: https://hyperskill.org/projects/91/stages/504/implement#comment
-status: Unchecked
+- name: src/engine/dtos/responses/QuizResponse.java
+  visible: true
+  learner_created: true
+- name: src/engine/controllers/QuizController.java
+  visible: true
+  learner_created: true
+- name: test/engine/controllers/QuizControllerTest.java
+  visible: true
+  learner_created: true
+- name: src/engine/dtos/requests/AnswerRequest.java
+  visible: true
+  learner_created: true
+- name: src/engine/dtos/responses/AnswerResponse.java
+  visible: true
+  learner_created: true
+feedback_link: https://hyperskill.org/learn/step/8252#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 01 Nov 2022 11:43:50 UTC"
 record: -1
