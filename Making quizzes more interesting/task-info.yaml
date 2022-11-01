@@ -446,6 +446,303 @@ files:
         }
     }
   learner_created: false
+- name: src/engine/services/QuizService.java
+  visible: true
+  text: |
+    package engine.services;
+
+    import engine.dtos.requests.QuizRequest;
+    import engine.dtos.responses.AnswerResponse;
+    import engine.dtos.responses.QuizResponse;
+    import engine.model.Quiz;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.stereotype.Service;
+    import org.springframework.web.server.ResponseStatusException;
+
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.concurrent.atomic.AtomicInteger;
+    import java.util.stream.Collectors;
+
+    @Service
+    public class QuizService {
+
+        private AtomicInteger id = new AtomicInteger(1);
+        private final List<Quiz> quizzes = new ArrayList<>();
+
+
+        public QuizResponse getQuizById(int id) {
+            return quizzes.stream()
+                    .filter(quiz -> quiz.getId() == id)
+                    .findFirst()
+                    .map(QuizResponse::new)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Quiz with id %d not found!".formatted(id)));
+        }
+
+        public List<QuizResponse> getAllQuizzes() {
+            return quizzes.stream().map(QuizResponse::new).collect(Collectors.toList());
+        }
+
+        public QuizResponse addQuiz(QuizRequest quizRequest) {
+            Quiz quiz = new Quiz(quizRequest);
+            quiz.setId(id.getAndIncrement());
+            quizzes.add(quiz);
+            return new QuizResponse(quiz);
+        }
+        public AnswerResponse checkQuizAnswer(int id, int answer) {
+            Quiz quiz1 = quizzes.stream()
+                    .filter(quiz -> quiz.getId() == id)
+                    .findFirst()
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Quiz with id %d not found!".formatted(id)));
+            if (answer == quiz1.getAnswer()) {
+                return new AnswerResponse(true);
+            }
+            return new AnswerResponse(false);
+        }
+    }
+  learner_created: true
+- name: src/engine/dtos/responses/QuizResponse.java
+  visible: true
+  text: |
+    package engine.dtos.responses;
+
+    import engine.model.Quiz;
+
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class QuizResponse {
+        private int id;
+        private String title;
+        private String text;
+        private List<String> options;
+
+        public QuizResponse() {
+            this.options = new ArrayList<>();
+        }
+
+        public QuizResponse(Quiz quiz) {
+            this.id = quiz.getId();
+            this.title = quiz.getTitle();
+            this.text = quiz.getText();
+            this.options = quiz.getOptions();
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public List<String> getOptions() {
+            return options;
+        }
+
+        public void setOptions(List<String> options) {
+            this.options = options;
+        }
+    }
+  learner_created: true
+- name: src/engine/model/Quiz.java
+  visible: true
+  text: |
+    package engine.model;
+
+    import engine.dtos.requests.QuizRequest;
+
+    import java.util.List;
+
+    public class Quiz {
+        private int id;
+        private String title;
+        private String text;
+        private List<String> options;
+        private int answer;
+
+        public Quiz() {
+        }
+
+        public Quiz(QuizRequest request) {
+            this.title = request.getTitle();
+            this.text = request.getText();
+            this.options = request.getOptions();
+            this.answer = request.getAnswer();
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public List<String> getOptions() {
+            return options;
+        }
+
+        public void setOptions(List<String> options) {
+            this.options = options;
+        }
+
+        public int getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(int answer) {
+            this.answer = answer;
+        }
+    }
+  learner_created: true
+- name: src/engine/controllers/QuizController.java
+  visible: true
+  text: |
+    package engine.controllers;
+
+    import engine.dtos.requests.QuizRequest;
+    import engine.dtos.responses.AnswerResponse;
+    import engine.dtos.responses.QuizResponse;
+    import engine.services.QuizService;
+    import org.springframework.web.bind.annotation.*;
+
+    import java.util.List;
+
+    @RestController
+    @RequestMapping("/api")
+    public class QuizController {
+
+        private final QuizService quizService;
+
+        public QuizController(QuizService quizService) {
+            this.quizService = quizService;
+        }
+
+        @GetMapping("/quizzes/{id}")
+        public QuizResponse getQuiz(@PathVariable int id) {
+            return quizService.getQuizById(id);
+        }
+
+        @GetMapping("/quizzes")
+        public List<QuizResponse> getAllQuizzes() {
+            return quizService.getAllQuizzes();
+        }
+
+        @PostMapping("/quizzes")
+        public QuizResponse addQuiz(@RequestBody QuizRequest request) {
+            return quizService.addQuiz(request);
+        }
+
+        @PostMapping("/quizzes/{id}/solve")
+        public AnswerResponse answerQuiz(@RequestParam(name = "answer") int answer, @PathVariable int id) {
+            return quizService.checkQuizAnswer(id, answer);
+        }
+    }
+  learner_created: true
+- name: src/engine/dtos/requests/AnswerRequest.java
+  visible: true
+  text: |
+    package engine.dtos.requests;
+
+    public class AnswerRequest {
+        private int answer;
+
+        public AnswerRequest() {
+        }
+
+        public AnswerRequest(int answer) {
+            this.answer = answer;
+        }
+
+        public int getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(int answer) {
+            this.answer = answer;
+        }
+
+        @Override
+        public String toString() {
+            return "AnswerRequest{" +
+                    "answer=" + answer +
+                    '}';
+        }
+    }
+  learner_created: true
+- name: src/engine/dtos/responses/AnswerResponse.java
+  visible: true
+  text: |
+    package engine.dtos.responses;
+
+    public class AnswerResponse {
+        private boolean success;
+        private String feedback;
+
+        public AnswerResponse(boolean success) {
+            this.success = success;
+            if (success) {
+                this.feedback = "Congratulations, you're right!";
+            } else {
+                this.feedback = "Wrong answer! Please, try again.";
+            }
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public String getFeedback() {
+            return feedback;
+        }
+
+        public void setFeedback(String feedback) {
+            this.feedback = feedback;
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/learn/step/8254#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Tue, 01 Nov 2022 13:45:48 UTC"
 record: -1

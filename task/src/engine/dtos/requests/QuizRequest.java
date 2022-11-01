@@ -1,19 +1,31 @@
 package engine.dtos.requests;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuizRequest {
+
+    @NotNull
+    @NotBlank
     private String title;
+    @NotNull
+    @NotBlank
     private String text;
+
+    @NotNull
+    @Size(min = 2)
     private List<String> options;
-    private int answer;
+    private List<Integer> answer;
 
     public QuizRequest() {
         this.options = new ArrayList<>();
+        this.answer = new ArrayList<>();
     }
 
-    public QuizRequest(String title, String text, List<String> options, int answer) {
+    public QuizRequest(String title, String text, List<String> options, List<Integer> answer) {
         this.title = title;
         this.text = text;
         this.options = options;
@@ -44,11 +56,11 @@ public class QuizRequest {
         this.options = options;
     }
 
-    public int getAnswer() {
+    public List<Integer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(List<Integer> answer) {
         this.answer = answer;
     }
 }

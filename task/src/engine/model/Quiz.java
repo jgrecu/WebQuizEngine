@@ -9,7 +9,7 @@ public class Quiz {
     private String title;
     private String text;
     private List<String> options;
-    private int answer;
+    private List<Integer> answer;
 
     public Quiz() {
     }
@@ -53,11 +53,11 @@ public class Quiz {
         this.options = options;
     }
 
-    public int getAnswer() {
+    public List<Integer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(List<Integer> answer) {
         this.answer = answer;
     }
 }

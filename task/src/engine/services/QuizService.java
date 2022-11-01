@@ -1,5 +1,6 @@
 package engine.services;
 
+import engine.dtos.requests.AnswerRequest;
 import engine.dtos.requests.QuizRequest;
 import engine.dtos.responses.AnswerResponse;
 import engine.dtos.responses.QuizResponse;
@@ -39,13 +40,13 @@ public class QuizService {
         quizzes.add(quiz);
         return new QuizResponse(quiz);
     }
-    public AnswerResponse checkQuizAnswer(int id, int answer) {
+    public AnswerResponse checkQuizAnswer(int id, AnswerRequest answer) {
         Quiz quiz1 = quizzes.stream()
                 .filter(quiz -> quiz.getId() == id)
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Quiz with id %d not found!".formatted(id)));
-        if (answer == quiz1.getAnswer()) {
+        if (quiz1.getAnswer().equals(answer.getAnswer())) {
             return new AnswerResponse(true);
         }
         return new AnswerResponse(false);

@@ -1,20 +1,24 @@
 package engine.dtos.requests;
 
+import org.apache.catalina.LifecycleState;
+
+import java.util.List;
+
 public class AnswerRequest {
-    private int answer;
+    private List<Integer> answer;
 
     public AnswerRequest() {
     }
 
-    public AnswerRequest(int answer) {
+    public AnswerRequest(List<Integer> answer) {
         this.answer = answer;
     }
 
-    public int getAnswer() {
+    public List<Integer> getAnswer() {
         return answer;
     }
 
-    public void setAnswer(int answer) {
+    public void setAnswer(List<Integer> answer) {
         this.answer = answer;
     }
 

@@ -1,11 +1,13 @@
 package engine.controllers;
 
+import engine.dtos.requests.AnswerRequest;
 import engine.dtos.requests.QuizRequest;
 import engine.dtos.responses.AnswerResponse;
 import engine.dtos.responses.QuizResponse;
 import engine.services.QuizService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,12 +31,12 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes")
-    public QuizResponse addQuiz(@RequestBody QuizRequest request) {
+    public QuizResponse addQuiz(@Valid @RequestBody QuizRequest request) {
         return quizService.addQuiz(request);
     }
 
     @PostMapping("/quizzes/{id}/solve")
-    public AnswerResponse answerQuiz(@RequestParam(name = "answer") int answer, @PathVariable int id) {
+    public AnswerResponse answerQuiz(@RequestBody AnswerRequest answer, @PathVariable int id) {
         return quizService.checkQuizAnswer(id, answer);
     }
 }
