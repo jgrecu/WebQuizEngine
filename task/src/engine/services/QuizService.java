@@ -5,48 +5,50 @@ import engine.dtos.requests.QuizRequest;
 import engine.dtos.responses.AnswerResponse;
 import engine.dtos.responses.QuizResponse;
 import engine.model.Quiz;
+import engine.repositories.QuizRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
 
-    private AtomicInteger id = new AtomicInteger(1);
-    private final List<Quiz> quizzes = new ArrayList<>();
+    private final QuizRepository quizRepository;
+
+    public QuizService(QuizRepository quizRepository) {
+        this.quizRepository = quizRepository;
+    }
 
 
-    public QuizResponse getQuizById(int id) {
-        return quizzes.stream()
-                .filter(quiz -> quiz.getId() == id)
-                .findFirst()
+    public QuizResponse getQuizById(long id) {
+        return quizRepository.findById(id)
                 .map(QuizResponse::new)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Quiz with id %d not found!".formatted(id)));
     }
 
     public List<QuizResponse> getAllQuizzes() {
-        return quizzes.stream().map(QuizResponse::new).collect(Collectors.toList());
+        return quizRepository.findAll()
+                .stream()
+                .map(QuizResponse::new)
+                .collect(Collectors.toList());
     }
 
     public QuizResponse addQuiz(QuizRequest quizRequest) {
         Quiz quiz = new Quiz(quizRequest);
-        quiz.setId(id.getAndIncrement());
-        quizzes.add(quiz);
-        return new QuizResponse(quiz);
+        Quiz savedQuiz = quizRepository.save(quiz);
+        return new QuizResponse(savedQuiz);
     }
-    public AnswerResponse checkQuizAnswer(int id, AnswerRequest answer) {
-        Quiz quiz1 = quizzes.stream()
-                .filter(quiz -> quiz.getId() == id)
-                .findFirst()
+
+    public AnswerResponse checkQuizAnswer(long id, AnswerRequest answer) {
+        Quiz quiz1 = quizRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Quiz with id %d not found!".formatted(id)));
-        if (quiz1.getAnswer().equals(answer.getAnswer())) {
+
+        if (answer.getAnswer().equals(quiz1.getAnswer())) {
             return new AnswerResponse(true);
         }
         return new AnswerResponse(false);

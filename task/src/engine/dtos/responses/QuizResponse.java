@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuizResponse {
-    private int id;
+    private long id;
     private String title;
     private String text;
     private List<String> options;
@@ -22,7 +22,7 @@ public class QuizResponse {
         this.options = quiz.getOptions();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

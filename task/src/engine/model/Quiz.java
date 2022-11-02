@@ -2,13 +2,20 @@ package engine.model;
 
 import engine.dtos.requests.QuizRequest;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "quizzes")
 public class Quiz {
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     private String title;
     private String text;
+    @ElementCollection
     private List<String> options;
+    @ElementCollection
     private List<Integer> answer;
 
     public Quiz() {
@@ -21,7 +28,7 @@ public class Quiz {
         this.answer = request.getAnswer();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -59,5 +66,16 @@ public class Quiz {
 
     public void setAnswer(List<Integer> answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return "Quiz{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", options=" + options +
+                ", answer=" + answer +
+                '}';
     }
 }

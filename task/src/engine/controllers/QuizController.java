@@ -21,7 +21,7 @@ public class QuizController {
     }
 
     @GetMapping("/quizzes/{id}")
-    public QuizResponse getQuiz(@PathVariable int id) {
+    public QuizResponse getQuiz(@PathVariable long id) {
         return quizService.getQuizById(id);
     }
 
@@ -36,7 +36,7 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes/{id}/solve")
-    public AnswerResponse answerQuiz(@RequestBody AnswerRequest answer, @PathVariable int id) {
+    public AnswerResponse answerQuiz(@RequestBody AnswerRequest answer, @PathVariable long id) {
         return quizService.checkQuizAnswer(id, answer);
     }
 }
