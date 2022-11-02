@@ -17,6 +17,7 @@ public class Quiz {
     private List<String> options;
     @ElementCollection
     private List<Integer> answer;
+    private String owner;
 
     public Quiz() {
     }
@@ -26,6 +27,7 @@ public class Quiz {
         this.text = request.getText();
         this.options = request.getOptions();
         this.answer = request.getAnswer();
+        this.owner = "";
     }
 
     public long getId() {
@@ -68,14 +70,15 @@ public class Quiz {
         this.answer = answer;
     }
 
-    @Override
-    public String toString() {
-        return "Quiz{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", options=" + options +
-                ", answer=" + answer +
-                '}';
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
