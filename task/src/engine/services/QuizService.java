@@ -4,30 +4,38 @@ import engine.dtos.requests.AnswerRequest;
 import engine.dtos.requests.QuizRequest;
 import engine.dtos.requests.UserRegistrationRequest;
 import engine.dtos.responses.AnswerResponse;
+import engine.dtos.responses.CompletedQuizResponse;
 import engine.dtos.responses.QuizResponse;
 import engine.model.Quiz;
 import engine.model.User;
+import engine.model.UserCompletedQuiz;
 import engine.repositories.QuizRepository;
+import engine.repositories.UserCompletedQuizRepository;
 import engine.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
 
     private final QuizRepository quizRepository;
     private final UserRepository userRepository;
+    private final UserCompletedQuizRepository userCompletedQuizRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public QuizService(QuizRepository quizRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public QuizService(QuizRepository quizRepository, UserRepository userRepository,
+                       UserCompletedQuizRepository userCompletedQuizRepository, PasswordEncoder passwordEncoder) {
         this.quizRepository = quizRepository;
         this.userRepository = userRepository;
+        this.userCompletedQuizRepository = userCompletedQuizRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -39,11 +47,22 @@ public class QuizService {
                         "Quiz with id %d not found!".formatted(id)));
     }
 
-    public List<QuizResponse> getAllQuizzes() {
-        return quizRepository.findAll()
-                .stream()
-                .map(QuizResponse::new)
-                .collect(Collectors.toList());
+    public Page<QuizResponse> getAllQuizzes(Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id"));
+
+        Page<Quiz> quizzes = quizRepository.findAll(pageRequest);
+        return quizzes.map(QuizResponse::new);
+
+    }
+
+    public Page<CompletedQuizResponse> getAllUsersCompleted(Integer page, String name) {
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Pageable pageRequest = PageRequest.of(page, 10, Sort.by("completedAt").descending());
+
+
+        Page<UserCompletedQuiz> completed = userCompletedQuizRepository.findAllByUserName(name, pageRequest);
+        return completed.map(CompletedQuizResponse::new);
     }
 
     public QuizResponse addQuiz(QuizRequest quizRequest, String name) {
@@ -53,12 +72,17 @@ public class QuizService {
         return new QuizResponse(savedQuiz);
     }
 
-    public AnswerResponse checkQuizAnswer(long id, AnswerRequest answer) {
+    public AnswerResponse checkQuizAnswer(long id, AnswerRequest answer, String name) {
         Quiz quiz1 = quizRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Quiz with id %d not found!".formatted(id)));
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         if (answer.getAnswer().equals(quiz1.getAnswer())) {
+            UserCompletedQuiz completedQuiz = new UserCompletedQuiz(name, id);
+            userCompletedQuizRepository.save(completedQuiz);
+
             return new AnswerResponse(true);
         }
         return new AnswerResponse(false);
@@ -71,7 +95,7 @@ public class QuizService {
         Optional<User> optionalUser = userRepository.findByUsername(userName);
 
         if (optionalUser.isPresent()) {
-            throw  new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         User user = new User(userName, passwordEncoder.encode(password));

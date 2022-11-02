@@ -4,14 +4,15 @@ import engine.dtos.requests.AnswerRequest;
 import engine.dtos.requests.QuizRequest;
 import engine.dtos.requests.UserRegistrationRequest;
 import engine.dtos.responses.AnswerResponse;
+import engine.dtos.responses.CompletedQuizResponse;
 import engine.dtos.responses.QuizResponse;
 import engine.services.QuizService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -29,8 +30,8 @@ public class QuizController {
     }
 
     @GetMapping("/quizzes")
-    public List<QuizResponse> getAllQuizzes() {
-        return quizService.getAllQuizzes();
+    public Page<QuizResponse> getAllQuizzes(@RequestParam(defaultValue = "0") Integer page) {
+        return quizService.getAllQuizzes(page);
     }
 
     @PostMapping("/quizzes")
@@ -40,8 +41,10 @@ public class QuizController {
     }
 
     @PostMapping("/quizzes/{id}/solve")
-    public AnswerResponse answerQuiz(@RequestBody AnswerRequest answer, @PathVariable long id) {
-        return quizService.checkQuizAnswer(id, answer);
+    public AnswerResponse answerQuiz(@RequestBody AnswerRequest answer, @PathVariable long id,
+                                     Authentication authentication) {
+        String name = authentication.getName();
+        return quizService.checkQuizAnswer(id, answer, name);
     }
 
     @PostMapping("/register")
@@ -54,5 +57,12 @@ public class QuizController {
     public void deleteQuiz(@PathVariable long id, Authentication authentication) {
         String name = authentication.getName();
         quizService.deleteQuiz(id, name);
+    }
+
+    @GetMapping("/quizzes/completed")
+    public Page<CompletedQuizResponse> getAllCompletedQuizzes(@RequestParam(defaultValue = "0") Integer page,
+                                                     Authentication authentication) {
+        String name = authentication.getName();
+        return quizService.getAllUsersCompleted(page, name);
     }
 }
