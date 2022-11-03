@@ -1,6 +1,6 @@
-package engine.repositories;
+package io.jeremy.engine.repositories;
 
-import engine.model.User;
+import io.jeremy.engine.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

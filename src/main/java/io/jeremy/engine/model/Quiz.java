@@ -1,6 +1,6 @@
-package engine.model;
+package io.jeremy.engine.model;
 
-import engine.dtos.requests.QuizRequest;
+import io.jeremy.engine.dtos.requests.QuizRequest;
 
 import javax.persistence.*;
 import java.util.List;

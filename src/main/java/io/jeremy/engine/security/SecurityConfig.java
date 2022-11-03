@@ -1,6 +1,6 @@
-package engine.security;
+package io.jeremy.engine.security;
 
-import engine.services.JpaUserDetailsService;
+import io.jeremy.engine.services.JpaUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

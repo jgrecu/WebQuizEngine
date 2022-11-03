@@ -1,6 +1,4 @@
-package engine.dtos.requests;
-
-import org.apache.catalina.LifecycleState;
+package io.jeremy.engine.dtos.requests;
 
 import java.util.List;
 

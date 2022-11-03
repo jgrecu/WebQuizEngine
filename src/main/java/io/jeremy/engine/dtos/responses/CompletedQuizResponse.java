@@ -1,7 +1,7 @@
-package engine.dtos.responses;
+package io.jeremy.engine.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import engine.model.UserCompletedQuiz;
+import io.jeremy.engine.model.UserCompletedQuiz;
 
 import java.time.LocalDateTime;
 

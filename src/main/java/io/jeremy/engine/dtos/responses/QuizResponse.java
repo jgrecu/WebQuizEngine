@@ -1,6 +1,6 @@
-package engine.dtos.responses;
+package io.jeremy.engine.dtos.responses;
 
-import engine.model.Quiz;
+import io.jeremy.engine.model.Quiz;
 
 import java.util.ArrayList;
 import java.util.List;

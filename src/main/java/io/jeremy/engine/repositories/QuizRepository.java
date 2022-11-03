@@ -1,6 +1,6 @@
-package engine.repositories;
+package io.jeremy.engine.repositories;
 
-import engine.model.Quiz;
+import io.jeremy.engine.model.Quiz;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QuizRepository extends JpaRepository<Quiz, Long> {

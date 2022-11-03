@@ -1,4 +1,4 @@
-package engine.model;
+package io.jeremy.engine.model;
 
 import javax.persistence.*;
 

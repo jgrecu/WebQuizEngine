@@ -1,4 +1,4 @@
-package engine.model;
+package io.jeremy.engine.model;
 
 import org.hibernate.annotations.UpdateTimestamp;
 

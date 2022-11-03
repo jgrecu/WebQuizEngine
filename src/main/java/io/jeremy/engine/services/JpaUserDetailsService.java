@@ -1,7 +1,7 @@
-package engine.services;
+package io.jeremy.engine.services;
 
-import engine.model.SecurityUser;
-import engine.repositories.UserRepository;
+import io.jeremy.engine.model.SecurityUser;
+import io.jeremy.engine.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

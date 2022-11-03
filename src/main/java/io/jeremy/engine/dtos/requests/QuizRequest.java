@@ -1,4 +1,4 @@
-package engine.dtos.requests;
+package io.jeremy.engine.dtos.requests;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

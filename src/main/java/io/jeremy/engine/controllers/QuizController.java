@@ -1,12 +1,12 @@
-package engine.controllers;
+package io.jeremy.engine.controllers;
 
-import engine.dtos.requests.AnswerRequest;
-import engine.dtos.requests.QuizRequest;
-import engine.dtos.requests.UserRegistrationRequest;
-import engine.dtos.responses.AnswerResponse;
-import engine.dtos.responses.CompletedQuizResponse;
-import engine.dtos.responses.QuizResponse;
-import engine.services.QuizService;
+import io.jeremy.engine.dtos.requests.AnswerRequest;
+import io.jeremy.engine.dtos.requests.QuizRequest;
+import io.jeremy.engine.dtos.requests.UserRegistrationRequest;
+import io.jeremy.engine.dtos.responses.AnswerResponse;
+import io.jeremy.engine.dtos.responses.CompletedQuizResponse;
+import io.jeremy.engine.dtos.responses.QuizResponse;
+import io.jeremy.engine.services.QuizService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -61,7 +61,7 @@ public class QuizController {
 
     @GetMapping("/quizzes/completed")
     public Page<CompletedQuizResponse> getAllCompletedQuizzes(@RequestParam(defaultValue = "0") Integer page,
-                                                     Authentication authentication) {
+                                                              Authentication authentication) {
         String name = authentication.getName();
         return quizService.getAllUsersCompleted(page, name);
     }

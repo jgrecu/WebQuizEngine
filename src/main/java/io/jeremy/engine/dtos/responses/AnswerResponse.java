@@ -1,4 +1,4 @@
-package engine.dtos.responses;
+package io.jeremy.engine.dtos.responses;
 
 public class AnswerResponse {
     private boolean success;
